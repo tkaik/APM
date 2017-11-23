@@ -17,6 +17,7 @@
   limitations under the License.
   =========================LICENSE_END==================================
   --%>
+<%@include file="/libs/foundation/global.jsp"%>
 <head>
 <meta http-equiv="Content-Type" content="text/html; utf-8" />
 <meta http-equiv="Pragma" content="no-cache">
@@ -29,6 +30,7 @@
 <cq:includeClientLib categories="cognifide.cqsm" />
 <link rel="shortcut icon" href="/etc/designs/cqsm/clientlibs/img/favicon.png" type="image/x-icon">
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" type="text/css" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
 <title><%=currentPage.getTitle()%></title>
 </head>
