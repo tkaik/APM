@@ -1,8 +1,12 @@
 package com.cognifide.cq.cqsm.graph.data;
 
 
+import com.google.gson.annotations.SerializedName;
+
 public class Node {
 	private String id;
+
+	@SerializedName("label")
 	private String name;
 
 	public Node(String id, String name) {

@@ -23,10 +23,14 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 
+import com.cognifide.cq.cqsm.graph.data.Graph;
+import com.cognifide.cq.cqsm.graph.data.Node;
 import com.google.gson.GsonBuilder;
 
 import org.apache.felix.scr.annotations.sling.SlingServlet;
@@ -45,7 +49,8 @@ public class GraphServlet extends SlingAllMethodsServlet {
   protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response)
       throws ServletException, IOException {
     List<String> groups = getGroups(request);
-    writeResponse(response);
+    Graph graph = getGraph(groups);
+    writeResponse(response, graph);
   }
 
   private List<String> getGroups(SlingHttpServletRequest request) {
@@ -54,17 +59,32 @@ public class GraphServlet extends SlingAllMethodsServlet {
     return list;
   }
 
-  private void writeResponse(SlingHttpServletResponse response)
+  private void writeResponse(SlingHttpServletResponse response, Graph graph)
       throws IOException {
     try (PrintWriter out = response.getWriter()) {
       new GsonBuilder()
           .create()
           .toJson(
-              Collections.singletonMap("status", "ok"),
+              Collections.singletonMap("data", graph),
               out
           );
     } catch (IOException e) {
       response.sendError(SlingHttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
+  }
+
+  private Graph getGraph(List<String> groups) {
+    Graph g = new Graph();
+    Node v1 = new Node("1", "Node 1");
+    Node v2 = new Node("2", "Node 1");
+    Node v3 = new Node("3", "Node 1");
+    Node v4 = new Node("4", "Node 1");
+    Node v5 = new Node("5", "Node 1");
+
+    g.addEdge(v1, v3 );
+    g.addEdge(v1, v2 );
+    g.addEdge(v2, v4 );
+    g.addEdge(v2, v5 );
+    return g;
   }
 }
