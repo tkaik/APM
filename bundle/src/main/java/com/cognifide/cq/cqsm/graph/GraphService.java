@@ -62,14 +62,18 @@ public class GraphService {
 		visitedGroups.add(group);
 
 		if (params.isShowChildren()) {
-			addChildren(graph, group, visitedGroups);
+			addChildren(graph, group, visitedGroups, params.getMaxDepth(), 0);
 		}
 		if (params.isShowParents()) {
-			addParents(graph, group, visitedGroups);
+			addParents(graph, group, visitedGroups, params.getMaxDepth(), 0);
 		}
 	}
 
-	private void addParents(Graph graph, Group group, Set<Group> visitedGroups) throws RepositoryException {
+	private void addParents(Graph graph, Group group, Set<Group> visitedGroups, int maxDepth, int currentDepth) throws RepositoryException {
+		currentDepth += 1;
+		if (currentDepth > maxDepth) {
+			return;
+		}
 		List<Group> parents = Lists.newArrayList(group.declaredMemberOf());
 		for (Authorizable parent : parents) {
 			Group parentGroup = (Group) parent;
@@ -78,13 +82,17 @@ public class GraphService {
 				Node toNode = new Node(group.getID(), group.getPrincipal().getName());
 				graph.addEdge(fromNode, toNode);
 				if (!visitedGroups.contains(parentGroup)) {
-					addParents(graph, parentGroup, visitedGroups);
+					addParents(graph, parentGroup, visitedGroups, maxDepth, currentDepth);
 				}
 			}
 		}
 	}
 
-	private void addChildren(Graph graph, Group group, Set<Group> visitedGroups) throws RepositoryException {
+	private void addChildren(Graph graph, Group group, Set<Group> visitedGroups, int maxDepth, int currentDepth) throws RepositoryException {
+		currentDepth += 1;
+		if (currentDepth > maxDepth) {
+			return;
+		}
 		List<Authorizable> children = Lists.newArrayList(group.getDeclaredMembers());
 		for (Authorizable child : children) {
 			if (child.isGroup() && !isIgnoredGroup(child.getID())) {
@@ -94,7 +102,7 @@ public class GraphService {
 				Node toNode = new Node(childGroup.getID(), childGroup.getPrincipal().getName());
 				graph.addEdge(fromNode, toNode);
 				if (!visitedGroups.contains(childGroup)) {
-					addChildren(graph, childGroup, visitedGroups);
+					addChildren(graph, childGroup, visitedGroups, maxDepth, currentDepth);
 				}
 			}
 		}

@@ -35,16 +35,22 @@
     font-size: 14px;
     margin: 10px;
     padding: 5px;
-    width: 95%;
+    width: 75%;
     height: 100%;
     border: 1px solid lightgray;
     background-color: white;
+    float: left;
 }
 
 #results-message {
     font-size: 14px;
     margin: 3px;
     padding: 5px;
+}
+
+#graph-settings {
+    float: left;
+    width: 20%;
 }
 
 .status-message {

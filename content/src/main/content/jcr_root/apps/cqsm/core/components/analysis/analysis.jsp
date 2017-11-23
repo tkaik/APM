@@ -31,6 +31,8 @@
 	<div>
 		Group name(s):<br/>
 		<input id="group" name="group" size="100"/> <br>
+		Max depth:<br/>
+		<input type="number" id="maxDepth" name="maxDepth" value="2"/> <br>
 		Show children: <input id="showChildren" type="checkbox" checked/>
 		Show parents:  <input id="showParents" type="checkbox" checked/>
 		<br/>
@@ -39,6 +41,8 @@
 	</div>
 
 	<div id="results-message"></div>
+
 	<div id="servlet-result"></div>
+	<div id="graph-settings"></div>
 
 </div>

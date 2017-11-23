@@ -97,16 +97,18 @@ Cog.component.analysis = (function($) {
     var draw = function(data) {
         // create a network
         var container = document.getElementById('servlet-result');
+        var settingsContainer = document.getElementById('graph-settings');
+        $(settingsContainer).empty();
+        options.configure.container = settingsContainer;
         // initialize your network!
         groupsGraph = new vis.Network(container, data, options);
     };
 
-    var helper = Cog.component.cqsmHelper;
-
-    function getResult(groupId, showChildren, showParents) {
+    function getResult(groupId, showChildren, showParents, maxDepth) {
+        $("#results-message").empty().append("Waiting for results...");
         $.ajax({
             type : "GET",
-            url : "/bin/createGroupGraph?group=" + groupId + "&showChildren=" + showChildren + "&showParents=" + showParents,
+            url : "/bin/createGroupGraph?group=" + groupId + "&showChildren=" + showChildren + "&showParents=" + showParents + "&maxDepth=" + maxDepth,
             dataType : "json",
             success : function(data) {
                 draw(data.data);
@@ -118,10 +120,11 @@ Cog.component.analysis = (function($) {
         });
     };
 
-    function getCsvResult(group, showChildren, showParents) {
+    function getCsvResult(group, showChildren, showParents, maxDepth) {
+        $("#results-message").empty().append("Waiting for export...");
 		$.ajax({
 			type : "GET",
-			url : "/bin/createCsvGroupGraph?group=" + group + "&showChildren=" + showChildren + "&showParents=" + showParents,
+			url : "/bin/createCsvGroupGraph?group=" + group + "&showChildren=" + showChildren + "&showParents=" + showParents + "&maxDepth=" + maxDepth,
 			dataType : "text",
 			success : function(data) {
 				var anchor = $('<a/>');
@@ -139,18 +142,21 @@ Cog.component.analysis = (function($) {
 	};
 
     api.init = function($elements) {
+
         $elements.each(function() {
             $(".analyse-button").click(function() {
                 var group = $('input#group').val();
+                var maxDepth = $('#maxDepth').val();
                 var showChildren = $('input#showChildren').is(':checked');
                 var showParents = $('input#showParents').is(':checked');
-                getResult(group, showChildren, showParents);
+                getResult(group, showChildren, showParents, maxDepth);
             });
             $(".csv-button").click(function() {
 				var group = $('input#group').val();
+                var maxDepth = $('#maxDepth').val();
                 var showChildren = $('input#showChildren').is(':checked');
                 var showParents = $('input#showParents').is(':checked');
-				getCsvResult(group, showChildren, showParents);
+				getCsvResult(group, showChildren, showParents, maxDepth);
 			});
         });
     };

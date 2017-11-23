@@ -15,20 +15,24 @@ public class CreateGroupsGraphParams {
 
   private final boolean showChildren;
 
-  public CreateGroupsGraphParams(List<String> groupsIds, boolean showParents, boolean showChildren) {
+  private final int maxDepth;
+
+  public CreateGroupsGraphParams(List<String> groupsIds, boolean showParents, boolean showChildren, int maxDepth) {
     this.groupsIds = groupsIds;
     this.showParents = showParents;
     this.showChildren = showChildren;
+    this.maxDepth = maxDepth;
   }
 
   public static CreateGroupsGraphParams fromRequest(SlingHttpServletRequest request) {
     String groupParam = StringUtils.defaultString(request.getParameter("group"));
     String[] split = StringUtils.split(groupParam, ',');
 
+    int maxDepth = Integer.valueOf(request.getParameter("maxDepth"));
     boolean showParents = Boolean.valueOf(request.getParameter("showParents"));
     boolean showChildren = Boolean.valueOf(request.getParameter("showChildren"));
 
-    return new CreateGroupsGraphParams(Arrays.asList(split), showParents, showChildren);
+    return new CreateGroupsGraphParams(Arrays.asList(split), showParents, showChildren, maxDepth);
   }
 
   public List<String> getGroupsIds() {
@@ -41,5 +45,9 @@ public class CreateGroupsGraphParams {
 
   public boolean isShowChildren() {
     return showChildren;
+  }
+
+  public int getMaxDepth() {
+    return maxDepth;
   }
 }

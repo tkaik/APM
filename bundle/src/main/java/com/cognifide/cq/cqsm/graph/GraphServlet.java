@@ -76,14 +76,14 @@ public class GraphServlet extends SlingAllMethodsServlet {
 
   private void writeErrorResponse(SlingHttpServletResponse response, CreateGraphException exception)
       throws IOException {
-    response.setStatus(503);
+    response.setStatus(400);
     try (PrintWriter out = response.getWriter()) {
       new GsonBuilder()
           .create()
           .toJson(
               ImmutableMap.builder()
-                  .put("status", 503)
-                  .put("exception", exception)
+                  .put("status", 400)
+                  .put("message", exception.getMessage())
                   .build(),
               out
           );
