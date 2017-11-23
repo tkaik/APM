@@ -1,7 +1,7 @@
 package com.cognifide.cq.cqsm.graph;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.OutputStream;
 
 import javax.servlet.ServletException;
 
@@ -11,9 +11,6 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.servlets.HttpConstants;
 import org.apache.sling.api.servlets.SlingAllMethodsServlet;
-
-import com.google.common.collect.ImmutableMap;
-import com.google.gson.GsonBuilder;
 
 @SlingServlet(
 		methods = { HttpConstants.METHOD_GET},
@@ -29,23 +26,24 @@ public class CsvGraphServlet extends SlingAllMethodsServlet {
 			throws ServletException, IOException {
 		CreateGroupsGraphParams groupsParams = CreateGroupsGraphParams.fromRequest(request);
 		String csvGraph = getCsvGraph(groupsParams);
-		writeResponse(response, csvGraph, groupsParams);
+		writeResponse(response, csvGraph);
 	}
 
-	private void writeResponse(SlingHttpServletResponse response, String csvGraph, CreateGroupsGraphParams params)
+	private void writeResponse(SlingHttpServletResponse response, String csvGraph)
 			throws IOException {
-		try (PrintWriter out = response.getWriter()) {
-			new GsonBuilder()
-					.create()
-					.toJson(
-							ImmutableMap.builder()
-										.put("data", csvGraph)
-										.put("params", params)
-										.build(),
-							out
-					);
-		} catch (IOException e) {
-			response.sendError(SlingHttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		response.setContentType("text/csv");
+		response.setHeader("Content-Disposition", "attachment; filename=\"graph.csv\"");
+		try
+		{
+			OutputStream outputStream = response.getOutputStream();
+			String outputResult = csvGraph;
+			outputStream.write(outputResult.getBytes());
+			outputStream.flush();
+			outputStream.close();
+		}
+		catch(Exception e)
+		{
+			System.out.println(e.toString());
 		}
 	}
 
