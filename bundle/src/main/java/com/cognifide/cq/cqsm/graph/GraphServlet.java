@@ -92,6 +92,6 @@ public class GraphServlet extends SlingAllMethodsServlet {
   }
   private Graph getGraph(CreateGroupsGraphParams params) throws CreatingGroupException {
     String everyone = params.getGroupsIds().stream().findFirst().orElse("everyone");
-    return graphService.createGraph(everyone);
+    return graphService.createGraph(everyone, params);
   }
 }

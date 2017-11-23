@@ -31,6 +31,9 @@
 	<div>
 		Group name(s):<br/>
 		<input id="group" name="group" size="100"/> <br>
+		Show children: <input id="showChildren" type="checkbox"/>
+		Show parents:  <input id="showParents" type="checkbox"/>
+		<br/>
 		<button class="cqsm-button analyse-button" type="submit">Analyse</button>
 		<button class="cqsm-button csv-button" type="submit">Generate CSV</button>
 	</div>
