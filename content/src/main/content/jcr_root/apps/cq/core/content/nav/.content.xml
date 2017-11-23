@@ -16,6 +16,11 @@
                 jcr:title="History"
                 href="/etc/cqsm/history.html"
                 id="cqsm-history"/>
+            <analysis
+                jcr:primaryType="nt:unstructured"
+                jcr:title="Analysis"
+                href="/etc/cqsm/analysis.html"
+                id="cqsm-analysis"/>
         </cqsm>
     </tools>
 </jcr:root>
