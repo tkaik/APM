@@ -1,6 +1,7 @@
 package com.cognifide.cq.cqsm.graph;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import javax.jcr.RepositoryException;
@@ -17,6 +18,7 @@ import org.apache.sling.api.resource.ResourceResolverFactory;
 
 import com.cognifide.cq.cqsm.graph.data.Graph;
 import com.cognifide.cq.cqsm.graph.data.Node;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 @Component
@@ -45,26 +47,29 @@ public class GraphService {
 	private void addEdges(Graph graph, Group group, Set<Group> visitedGroups) throws RepositoryException {
 		visitedGroups.add(group);
 
-		Iterator<Authorizable> children = group.getDeclaredMembers();
+		List<Authorizable> children = Lists.newArrayList(group.getDeclaredMembers());
 		Iterator<Group> parents = group.memberOf();
 
-		while(children.hasNext()) {
-			Group childGroup = (Group)children.next();
-			Node fromNode = new Node(group.getID(), "");
-			Node toNode = new Node(childGroup.getID(), "");
-			graph.addEdge(fromNode, toNode);
-			if(!visitedGroups.contains(childGroup)) {
-				addEdges(graph, childGroup, visitedGroups);
+		for (Authorizable child : children) {
+			if (child.isGroup()) {
+				Group childGroup = (Group)child;
+				Node fromNode = new Node(group.getID(), "");
+				Node toNode = new Node(childGroup.getID(), "");
+				graph.addEdge(fromNode, toNode);
+				if(!visitedGroups.contains(childGroup)) {
+					addEdges(graph, childGroup, visitedGroups);
+				}
 			}
 		}
-		while(parents.hasNext()) {
-			Group parentGroup = parents.next();
-			Node fromNode = new Node(parentGroup.getID(), "");
-			Node toNode = new Node(group.getID(), "");
-			graph.addEdge(fromNode, toNode);
-			if(!visitedGroups.contains(parentGroup)) {
-				addEdges(graph, parentGroup, visitedGroups);
-			}
-		}
+
+		//while(parents.hasNext()) {
+		//	Group parentGroup = parents.next();
+		//	Node fromNode = new Node(parentGroup.getID(), "");
+		//	Node toNode = new Node(group.getID(), "");
+		//	graph.addEdge(fromNode, toNode);
+		//	if(!visitedGroups.contains(parentGroup)) {
+		//		addEdges(graph, parentGroup, visitedGroups);
+		//	}
+		//}
 	}
 }

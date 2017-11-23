@@ -31,8 +31,10 @@ import javax.servlet.ServletException;
 
 import com.cognifide.cq.cqsm.graph.data.Graph;
 import com.cognifide.cq.cqsm.graph.data.Node;
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.GsonBuilder;
 
+import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.sling.SlingServlet;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
@@ -45,12 +47,15 @@ import org.apache.sling.api.servlets.SlingAllMethodsServlet;
 )
 public class GraphServlet extends SlingAllMethodsServlet {
 
+  @Reference
+  private GraphService graphService;
+
   @Override
   protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response)
       throws ServletException, IOException {
-    List<String> groups = getGroups(request);
-    Graph graph = getGraph(groups);
-    writeResponse(response, graph);
+    CreateGroupsGraphParams groupsParams = CreateGroupsGraphParams.fromRequest(request);
+    Graph graph = getGraph(groupsParams);
+    writeResponse(response, graph, groupsParams);
   }
 
   private List<String> getGroups(SlingHttpServletRequest request) {
@@ -59,13 +64,16 @@ public class GraphServlet extends SlingAllMethodsServlet {
     return list;
   }
 
-  private void writeResponse(SlingHttpServletResponse response, Graph graph)
+  private void writeResponse(SlingHttpServletResponse response, Graph graph, CreateGroupsGraphParams params)
       throws IOException {
     try (PrintWriter out = response.getWriter()) {
       new GsonBuilder()
           .create()
           .toJson(
-              Collections.singletonMap("data", graph),
+              ImmutableMap.builder()
+              .put("data", graph)
+              .put("params", params)
+              .build(),
               out
           );
     } catch (IOException e) {
@@ -73,7 +81,7 @@ public class GraphServlet extends SlingAllMethodsServlet {
     }
   }
 
-  private Graph getGraph(List<String> groups) {
+  private Graph getGraph(CreateGroupsGraphParams params) {
     Graph g = new Graph();
     Node v1 = new Node("1", "Node 1");
     Node v2 = new Node("2", "Node 1");
@@ -85,6 +93,6 @@ public class GraphServlet extends SlingAllMethodsServlet {
     g.addEdge(v1, v2 );
     g.addEdge(v2, v4 );
     g.addEdge(v2, v5 );
-    return g;
+    return graphService.createGraph("everyone");
   }
 }
