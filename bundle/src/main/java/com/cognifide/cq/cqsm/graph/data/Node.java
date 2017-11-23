@@ -17,4 +17,12 @@ public class Node {
 	public String getName() {
 		return name;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof Node)) {
+			return false;
+		}
+		return this.getId().equals(((Node)obj).getId());
+	}
 }

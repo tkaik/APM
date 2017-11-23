@@ -16,4 +16,13 @@ public class Edge {
 	public String getTo() {
 		return to;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof Edge)) {
+			return false;
+		}
+		Edge edgeObj = (Edge)obj;
+		return this.getFrom().equals(edgeObj.getFrom()) && this.getTo().equals(edgeObj.getTo());
+	}
 }
