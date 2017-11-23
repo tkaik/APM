@@ -80,10 +80,11 @@ Cog.component.analysis = (function($) {
 
     var helper = Cog.component.cqsmHelper;
 
-    function getResult(group, showChildren, showParents) {
+    function getResult(groupId, showChildren, showParents) {
+        this.groupId = groupId;
         $.ajax({
             type : "GET",
-            url : "/bin/createGroupGraph?group=" + group + "&showChildren=" + showChildren + "&showParents=" + showParents,
+            url : "/bin/createGroupGraph?group=" + groupId + "&showChildren=" + showChildren + "&showParents=" + showParents,
             dataType : "json",
             success : function(data) {
                 draw(data.data);
@@ -94,10 +95,10 @@ Cog.component.analysis = (function($) {
         });
     };
 
-    function getCsvResult(group) {
+    function getCsvResult(group, showChildren, showParents) {
 		$.ajax({
 			type : "GET",
-			url : "/bin/createCsvGroupGraph?group=" + group,
+			url : "/bin/createCsvGroupGraph?group=" + group + "&showChildren=" + showChildren + "&showParents=" + showParents,
 			dataType : "text",
 			success : function(data) {
 				var anchor = $('<a/>');
