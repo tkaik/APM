@@ -25,6 +25,7 @@ import java.util.List;
 
 import javax.servlet.ServletException;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.sling.SlingServlet;
 import org.apache.sling.api.SlingHttpServletRequest;
@@ -33,6 +34,7 @@ import org.apache.sling.api.servlets.HttpConstants;
 import org.apache.sling.api.servlets.SlingAllMethodsServlet;
 
 import com.cognifide.cq.cqsm.graph.data.Graph;
+import com.drew.lang.StringUtil;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.GsonBuilder;
 
@@ -84,6 +86,7 @@ public class GraphServlet extends SlingAllMethodsServlet {
               ImmutableMap.builder()
                   .put("status", 400)
                   .put("message", exception.getMessage())
+                  .put("exception", ExceptionUtils.getStackTrace(exception))
                   .build(),
               out
           );

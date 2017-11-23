@@ -106,9 +106,12 @@ Cog.component.analysis = (function($) {
         groupsGraph.on("click", function (params) {
             if (params.nodes.length > 0) {
                 if ((typeof params.nodes[0] === 'string') && (params.nodes[0].indexOf('cluster') !== -1)) {
-                	groupsGraph.clustering.openCluster(params.nodes[0]);
+                    groupsGraph.clustering.openCluster(params.nodes[0]);
                 } else {
-                	groupsGraph.clustering.clusterByConnection(params.nodes[0]);
+                    groupsGraph.clustering.clusterByConnection(params.nodes[0], {clusterNodeProperties: {
+                        label: "groups",
+                        color: '#4b4a4c'
+                    }});
                 }
             }
         });
@@ -124,8 +127,9 @@ Cog.component.analysis = (function($) {
                 draw(data.data);
                 $("#results-message").empty().append("Analysis finished");
             },
-            error : function() {
-                $("#results-message").empty().append("Error");
+            error : function(data) {
+              var responseInfo = data.responseJSON || {};
+              $("#results-message").empty().append(responseInfo.message || "Unexpected error occurred.");
             }
         });
     };
@@ -145,8 +149,9 @@ Cog.component.analysis = (function($) {
                  })[0].click();
                 $("#results-message").empty().append("Export finished");
             },
-            error : function() {
-                $("#results-message").empty().append("Error");
+            error : function(data) {
+        var responseInfo = data.responseJSON || {};
+        $("#results-message").empty().append(responseInfo.message || "Unexpected error occurred.");
             }
         });
     };

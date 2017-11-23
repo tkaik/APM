@@ -2,9 +2,14 @@ package com.cognifide.cq.cqsm.graph;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.gson.GsonBuilder;
+
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.sling.SlingServlet;
 import org.apache.sling.api.SlingHttpServletRequest;
@@ -33,8 +38,7 @@ public class CsvGraphServlet extends SlingAllMethodsServlet {
 		try {
 			csvGraph = getCsvGraph(groupsParams);
 		} catch (CreateGraphException e) {
-			//TODO:Do it better later
-			csvGraph = "Failed to create graph " + e.getMessage();
+			writeErrorResponse(response, e);
 		}
 		writeResponse(response, csvGraph);
 	}
@@ -48,6 +52,25 @@ public class CsvGraphServlet extends SlingAllMethodsServlet {
 			String outputResult = csvGraph;
 			outputStream.write(outputResult.getBytes());
 			outputStream.flush();
+		} catch (IOException e) {
+			response.sendError(SlingHttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+	}
+	//FIXME:Copy paste here
+	private void writeErrorResponse(SlingHttpServletResponse response, CreateGraphException exception)
+			throws IOException {
+		response.setStatus(400);
+		try (PrintWriter out = response.getWriter()) {
+			new GsonBuilder()
+					.create()
+					.toJson(
+							ImmutableMap.builder()
+									.put("status", 400)
+									.put("message", exception.getMessage())
+									.put("exception", ExceptionUtils.getStackTrace(exception))
+									.build(),
+							out
+					);
 		} catch (IOException e) {
 			response.sendError(SlingHttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
