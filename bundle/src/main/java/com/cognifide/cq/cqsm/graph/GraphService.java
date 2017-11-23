@@ -1,9 +1,7 @@
 package com.cognifide.cq.cqsm.graph;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.jcr.RepositoryException;
 
@@ -19,7 +17,6 @@ import org.apache.sling.api.resource.ResourceResolverFactory;
 
 import com.cognifide.cq.cqsm.graph.data.Graph;
 import com.cognifide.cq.cqsm.graph.data.Node;
-import com.drew.lang.StringUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 

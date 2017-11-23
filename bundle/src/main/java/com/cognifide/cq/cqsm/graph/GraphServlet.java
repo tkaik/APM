@@ -21,18 +21,8 @@ package com.cognifide.cq.cqsm.graph;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
-
-import com.cognifide.cq.cqsm.graph.data.Graph;
-import com.cognifide.cq.cqsm.graph.data.Node;
-import com.google.common.collect.ImmutableMap;
-import com.google.gson.GsonBuilder;
 
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.sling.SlingServlet;
@@ -40,6 +30,10 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.servlets.HttpConstants;
 import org.apache.sling.api.servlets.SlingAllMethodsServlet;
+
+import com.cognifide.cq.cqsm.graph.data.Graph;
+import com.google.common.collect.ImmutableMap;
+import com.google.gson.GsonBuilder;
 
 @SlingServlet(
     methods = {HttpConstants.METHOD_GET},
@@ -56,12 +50,6 @@ public class GraphServlet extends SlingAllMethodsServlet {
     CreateGroupsGraphParams groupsParams = CreateGroupsGraphParams.fromRequest(request);
     Graph graph = getGraph(groupsParams);
     writeResponse(response, graph, groupsParams);
-  }
-
-  private List<String> getGroups(SlingHttpServletRequest request) {
-    List<String> list = new ArrayList<>();
-    list.add("cp-static-author");
-    return list;
   }
 
   private void writeResponse(SlingHttpServletResponse response, Graph graph, CreateGroupsGraphParams params)
@@ -82,17 +70,6 @@ public class GraphServlet extends SlingAllMethodsServlet {
   }
 
   private Graph getGraph(CreateGroupsGraphParams params) {
-    Graph g = new Graph();
-    Node v1 = new Node("1", "Node 1");
-    Node v2 = new Node("2", "Node 1");
-    Node v3 = new Node("3", "Node 1");
-    Node v4 = new Node("4", "Node 1");
-    Node v5 = new Node("5", "Node 1");
-
-    g.addEdge(v1, v3 );
-    g.addEdge(v1, v2 );
-    g.addEdge(v2, v4 );
-    g.addEdge(v2, v5 );
     String everyone = params.getGroupsIds().stream().findFirst().orElse("everyone");
     return graphService.createGraph(everyone);
   }
