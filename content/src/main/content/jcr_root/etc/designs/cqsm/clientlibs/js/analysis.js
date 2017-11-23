@@ -39,7 +39,8 @@ Cog.component.analysis = (function($) {
                     scaleFactor : 1,
                     type : 'arrow'
                 }
-            }
+            },
+            arrowStrikethrough: false
         },
         layout : {
             hierarchical : {
