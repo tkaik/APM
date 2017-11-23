@@ -110,7 +110,7 @@ Cog.component.analysis = (function($) {
                 } else {
                     groupsGraph.clustering.clusterByConnection(params.nodes[0], {clusterNodeProperties: {
                         label: "groups",
-                        color: '#4b4a4c'
+                        color: '#ebeaed'
                     }});
                 }
             }
