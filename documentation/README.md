@@ -1,6 +1,5 @@
 ![AEM Permission Managment](src/main/wiki/assets/misc/apmLogo.png)
 # AEM Permission Management
-#test
 
 ## Documentation Module
 Contains documentation of the APM tool.
