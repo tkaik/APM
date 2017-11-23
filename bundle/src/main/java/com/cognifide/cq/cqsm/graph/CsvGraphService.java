@@ -11,12 +11,8 @@ import com.cognifide.cq.cqsm.graph.data.Graph;
 @Service(CsvGraphService.class)
 public class CsvGraphService {
 
-	@Reference
-	GraphService graphService;
-
-	public String createCsvGraphStructure(String groupId) {
+	public String createCsvGraphStructure(Graph graph) {
 		StringBuilder result = new StringBuilder();
-		Graph graph = graphService.createGraph(groupId);
 		for(Edge edge : graph.getEdges()) {
 			result.append(edge.getFrom().getId());
 			result.append(";");

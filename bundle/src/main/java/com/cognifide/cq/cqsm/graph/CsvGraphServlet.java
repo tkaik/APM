@@ -21,11 +21,21 @@ public class CsvGraphServlet extends SlingAllMethodsServlet {
 	@Reference
 	private CsvGraphService csvGraphService;
 
+	@Reference
+	private GraphService graphService;
+
+
 	@Override
 	protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response)
 			throws ServletException, IOException {
 		CreateGroupsGraphParams groupsParams = CreateGroupsGraphParams.fromRequest(request);
-		String csvGraph = getCsvGraph(groupsParams);
+		String csvGraph = null;
+		try {
+			csvGraph = getCsvGraph(groupsParams);
+		} catch (CreatingGroupException e) {
+			//TODO:Do it better later
+			csvGraph = "Failed to create graph " + e.getMessage();
+		}
 		writeResponse(response, csvGraph);
 	}
 
@@ -47,8 +57,8 @@ public class CsvGraphServlet extends SlingAllMethodsServlet {
 		}
 	}
 
-	private String getCsvGraph(CreateGroupsGraphParams params) {
+	private String getCsvGraph(CreateGroupsGraphParams params) throws CreatingGroupException {
 		String everyone = params.getGroupsIds().stream().findFirst().orElse("everyone");
-		return csvGraphService.createCsvGraphStructure(everyone);
+		return csvGraphService.createCsvGraphStructure(graphService.createGraph(everyone));
 	}
 }

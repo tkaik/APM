@@ -1,6 +1,7 @@
 package com.cognifide.cq.cqsm.graph;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.jcr.RepositoryException;
@@ -27,19 +28,22 @@ public class GraphService {
 	@Reference
 	private transient ResourceResolverFactory resourceResolverFactory;
 
-	public Graph createGraph(String groupId) {
+	public Graph createGraph(String groupId) throws CreatingGroupException {
 		Graph result = new Graph();
 		Set<Group> visitedGroups = Sets.newHashSet();
 		try {
 			ResourceResolver resourceResolver = resourceResolverFactory.getAdministrativeResourceResolver(null);
-			UserManager userManager = resourceResolver.adaptTo(UserManager.class);
+
+			UserManager userManager = Optional.ofNullable(resourceResolver.adaptTo(UserManager.class))
+					.orElseThrow(() -> new CreatingGroupException("Failed to create user manager"));
 
 			Group group = (Group)userManager.getAuthorizable(groupId);
+
 			if (group != null) {
 				addEdges(result, group, visitedGroups);
 			}
 		} catch(LoginException | RepositoryException exc ) {
-			//TODO:Exception throw
+			throw new CreatingGroupException("Failed to create groups with error.", exc);
 		}
 		return result;
 	}
