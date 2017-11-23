@@ -12,3 +12,4 @@ cqsmView.js
 cqsmHistory.js
 cqsmImport.js
 cqsmConsole.js
+analysis.js

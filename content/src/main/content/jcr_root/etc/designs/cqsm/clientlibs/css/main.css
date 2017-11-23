@@ -31,6 +31,12 @@
     font-weight: bold;
 }
 
+#servlet-result {
+    font-size: 14px;
+    margin: 10px;
+    padding: 5px;
+}
+
 .status-message {
     display: none;
     font-size: 14px;
