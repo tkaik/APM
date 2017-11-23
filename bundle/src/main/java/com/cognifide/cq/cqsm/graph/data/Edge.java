@@ -1,9 +1,9 @@
 package com.cognifide.cq.cqsm.graph.data;
 
-import com.google.gson.annotations.SerializedName;
-
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+
+import com.google.gson.annotations.SerializedName;
 
 public class Edge {
 	@SerializedName("fromNode")
