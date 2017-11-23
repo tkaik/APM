@@ -137,7 +137,9 @@ Cog.component.analysis = (function($) {
             });
             $(".csv-button").click(function() {
 				var group = $('input#group').val();
-				getCsvResult(group);
+                var showChildren = $('input#showChildren').is(':checked');
+                var showParents = $('input#showParents').is(':checked');
+				getCsvResult(group, showChildren, showParents);
 			});
         });
     };
