@@ -1,6 +1,7 @@
 package com.cognifide.cq.cqsm.graph;
 
 import java.util.Iterator;
+import java.util.Set;
 
 import javax.jcr.RepositoryException;
 
@@ -15,7 +16,8 @@ import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 
 import com.cognifide.cq.cqsm.graph.data.Graph;
-import com.google.common.collect.Lists;
+import com.cognifide.cq.cqsm.graph.data.Node;
+import com.google.common.collect.Sets;
 
 @Component
 @Service(GraphService.class)
@@ -26,25 +28,43 @@ public class GraphService {
 
 	public Graph createGraph(String groupId) {
 		Graph result = new Graph();
+		Set<Group> visitedGroups = Sets.newHashSet();
 		try {
 			ResourceResolver resourceResolver = resourceResolverFactory.getAdministrativeResourceResolver(null);
 			UserManager userManager = resourceResolver.adaptTo(UserManager.class);
 
 			Group group = (Group)userManager.getAuthorizable(groupId);
 
-			Iterator<Authorizable> children = group.getDeclaredMembers();
-			Iterator<Group> parents = group.memberOf();
-
-			for (Authorizable a : Lists.newArrayList(children)) {
-				//nodes.addAll(children);
-			}
-
-			for (Authorizable a : Lists.newArrayList(parents)) {
-
-			}
+			addEdges(result, group, visitedGroups);
 		} catch(LoginException | RepositoryException exc ) {
 
 		}
 		return result;
+	}
+
+	private void addEdges(Graph graph, Group group, Set<Group> visitedGroups) throws RepositoryException {
+		visitedGroups.add(group);
+
+		Iterator<Authorizable> children = group.getDeclaredMembers();
+		Iterator<Group> parents = group.memberOf();
+
+		while(children.hasNext()) {
+			Group childGroup = (Group)children.next();
+			Node fromNode = new Node(group.getID(), "");
+			Node toNode = new Node(childGroup.getID(), "");
+			graph.addEdge(fromNode, toNode);
+			if(!visitedGroups.contains(childGroup)) {
+				addEdges(graph, childGroup, visitedGroups);
+			}
+		}
+		while(parents.hasNext()) {
+			Group parentGroup = parents.next();
+			Node fromNode = new Node(parentGroup.getID(), "");
+			Node toNode = new Node(group.getID(), "");
+			graph.addEdge(fromNode, toNode);
+			if(!visitedGroups.contains(parentGroup)) {
+				addEdges(graph, parentGroup, visitedGroups);
+			}
+		}
 	}
 }
