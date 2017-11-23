@@ -49,14 +49,14 @@ public class GraphService {
 		visitedGroups.add(group);
 
 		List<Authorizable> children = Lists.newArrayList(group.getDeclaredMembers());
-		Iterator<Group> parents = group.memberOf();
+		List<Group> parents = Lists.newArrayList(group.memberOf());
 
 		for (Authorizable child : children) {
 			if (child.isGroup()) {
 				Group childGroup = (Group)child;
 
-				Node fromNode = new Node(group.getID(), "");
-				Node toNode = new Node(childGroup.getID(), "");
+				Node fromNode = new Node(group.getID(), group.getPrincipal().getName());
+				Node toNode = new Node(childGroup.getID(), childGroup.getPrincipal().getName());
 				graph.addEdge(fromNode, toNode);
 				if(!visitedGroups.contains(childGroup)) {
 					addEdges(graph, childGroup, visitedGroups);
@@ -64,14 +64,14 @@ public class GraphService {
 			}
 		}
 
-		//while(parents.hasNext()) {
-		//	Group parentGroup = parents.next();
-		//	Node fromNode = new Node(parentGroup.getID(), "");
-		//	Node toNode = new Node(group.getID(), "");
-		//	graph.addEdge(fromNode, toNode);
-		//	if(!visitedGroups.contains(parentGroup)) {
-		//		addEdges(graph, parentGroup, visitedGroups);
-		//	}
-		//}
+		for (Authorizable parent : parents) {
+			Group parentGroup = (Group) parent;
+			Node fromNode = new Node(parentGroup.getID(), parentGroup.getPrincipal().getName());
+			Node toNode = new Node(group.getID(), group.getPrincipal().getName());
+			graph.addEdge(fromNode, toNode);
+			if(!visitedGroups.contains(parentGroup)) {
+				addEdges(graph, parentGroup, visitedGroups);
+			}
+		}
 	}
 }
