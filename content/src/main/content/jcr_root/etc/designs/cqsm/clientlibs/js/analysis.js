@@ -102,6 +102,16 @@ Cog.component.analysis = (function($) {
         options.configure.container = settingsContainer;
         // initialize your network!
         groupsGraph = new vis.Network(container, data, options);
+        
+        groupsGraph.on("click", function (params) {
+            if (params.nodes.length > 0) {
+                if ((typeof params.nodes[0] === 'string') && (params.nodes[0].indexOf('cluster') !== -1)) {
+                	groupsGraph.clustering.openCluster(params.nodes[0]);
+                } else {
+                	groupsGraph.clustering.clusterByConnection(params.nodes[0]);
+                }
+            }
+        });
     };
 
     function getResult(groupId, showChildren, showParents, maxDepth) {
@@ -122,24 +132,24 @@ Cog.component.analysis = (function($) {
 
     function getCsvResult(group, showChildren, showParents, maxDepth) {
         $("#results-message").empty().append("Waiting for export...");
-		$.ajax({
-			type : "GET",
-			url : "/bin/createCsvGroupGraph?group=" + group + "&showChildren=" + showChildren + "&showParents=" + showParents + "&maxDepth=" + maxDepth,
-			dataType : "text",
-			success : function(data) {
-				var anchor = $('<a/>');
-				 anchor.attr({
-					 href: 'data:attachment/csv;charset=utf-8,' + encodeURI(data),
-					 target: '_blank',
-					 download: 'graph.csv'
-				 })[0].click();
+        $.ajax({
+            type : "GET",
+            url : "/bin/createCsvGroupGraph?group=" + group + "&showChildren=" + showChildren + "&showParents=" + showParents + "&maxDepth=" + maxDepth,
+            dataType : "text",
+            success : function(data) {
+                var anchor = $('<a/>');
+                 anchor.attr({
+                     href: 'data:attachment/csv;charset=utf-8,' + encodeURI(data),
+                     target: '_blank',
+                     download: 'graph.csv'
+                 })[0].click();
                 $("#results-message").empty().append("Export finished");
-			},
-			error : function() {
+            },
+            error : function() {
                 $("#results-message").empty().append("Error");
-			}
-		});
-	};
+            }
+        });
+    };
 
     api.init = function($elements) {
 
@@ -152,12 +162,12 @@ Cog.component.analysis = (function($) {
                 getResult(group, showChildren, showParents, maxDepth);
             });
             $(".csv-button").click(function() {
-				var group = $('input#group').val();
+                var group = $('input#group').val();
                 var maxDepth = $('#maxDepth').val();
                 var showChildren = $('input#showChildren').is(':checked');
                 var showParents = $('input#showParents').is(':checked');
-				getCsvResult(group, showChildren, showParents, maxDepth);
-			});
+                getCsvResult(group, showChildren, showParents, maxDepth);
+            });
         });
     };
 
