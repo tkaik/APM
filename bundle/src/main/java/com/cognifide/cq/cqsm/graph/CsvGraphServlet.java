@@ -32,7 +32,7 @@ public class CsvGraphServlet extends SlingAllMethodsServlet {
 		String csvGraph = null;
 		try {
 			csvGraph = getCsvGraph(groupsParams);
-		} catch (CreatingGroupException e) {
+		} catch (CreateGraphException e) {
 			//TODO:Do it better later
 			csvGraph = "Failed to create graph " + e.getMessage();
 		}
@@ -43,21 +43,17 @@ public class CsvGraphServlet extends SlingAllMethodsServlet {
 			throws IOException {
 		response.setContentType("text/csv");
 		response.setHeader("Content-Disposition", "attachment; filename=\"graph.csv\"");
-		try
+		try(OutputStream outputStream = response.getOutputStream())
 		{
-			OutputStream outputStream = response.getOutputStream();
 			String outputResult = csvGraph;
 			outputStream.write(outputResult.getBytes());
 			outputStream.flush();
-			outputStream.close();
-		}
-		catch(Exception e)
-		{
-			System.out.println(e.toString());
+		} catch (IOException e) {
+			response.sendError(SlingHttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
 
-	private String getCsvGraph(CreateGroupsGraphParams params) throws CreatingGroupException {
+	private String getCsvGraph(CreateGroupsGraphParams params) throws CreateGraphException {
 		String everyone = params.getGroupsIds().stream().findFirst().orElse("everyone");
 		return csvGraphService.createCsvGraphStructure(graphService.createGraph(everyone, params));
 	}

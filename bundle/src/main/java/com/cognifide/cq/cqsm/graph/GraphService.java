@@ -1,9 +1,11 @@
 package com.cognifide.cq.cqsm.graph;
 
-import com.cognifide.cq.cqsm.graph.data.Graph;
-import com.cognifide.cq.cqsm.graph.data.Node;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+
+import javax.jcr.RepositoryException;
+
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
@@ -16,10 +18,10 @@ import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.jcr.RepositoryException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import com.cognifide.cq.cqsm.graph.data.Graph;
+import com.cognifide.cq.cqsm.graph.data.Node;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 @Component
 @Service(GraphService.class)
@@ -33,7 +35,7 @@ public class GraphService {
 	@Reference
 	private transient ResourceResolverFactory resourceResolverFactory;
 
-	public Graph createGraph(String groupId, CreateGroupsGraphParams params) throws CreatingGroupException {
+	public Graph createGraph(String groupId, CreateGroupsGraphParams params) throws CreateGraphException {
 		Graph result = new Graph();
 		Set<Group> visitedGroups = Sets.newHashSet();
 		try {
@@ -41,7 +43,7 @@ public class GraphService {
 
 			UserManager userManager = resourceResolver.adaptTo(UserManager.class);
 			if (userManager == null) {
-				throw new CreatingGroupException("Failed to create user manager");
+				throw new CreateGraphException("Failed to create user manager");
 			}
 
 			Group group = (Group)userManager.getAuthorizable(groupId);
@@ -50,7 +52,7 @@ public class GraphService {
 				addEdges(result, group, visitedGroups, params);
 			}
 		} catch(LoginException | RepositoryException exc ) {
-			throw new CreatingGroupException("Failed to create groups with error.", exc);
+			throw new CreateGraphException("Failed to create groups with error.", exc);
 		}
 		return result;
 	}

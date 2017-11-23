@@ -51,7 +51,7 @@ public class GraphServlet extends SlingAllMethodsServlet {
     try {
       Graph graph = getGraph(groupsParams);
       writeResponse(response, graph, groupsParams);
-    } catch (CreatingGroupException e) {
+    } catch (CreateGraphException e) {
       writeErrorResponse(response, e);
     }
   }
@@ -73,7 +73,7 @@ public class GraphServlet extends SlingAllMethodsServlet {
     }
   }
 
-  private void writeErrorResponse(SlingHttpServletResponse response, CreatingGroupException exception)
+  private void writeErrorResponse(SlingHttpServletResponse response, CreateGraphException exception)
       throws IOException {
     response.setStatus(503);
     try (PrintWriter out = response.getWriter()) {
@@ -90,7 +90,7 @@ public class GraphServlet extends SlingAllMethodsServlet {
       response.sendError(SlingHttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
   }
-  private Graph getGraph(CreateGroupsGraphParams params) throws CreatingGroupException {
+  private Graph getGraph(CreateGroupsGraphParams params) throws CreateGraphException {
     String everyone = params.getGroupsIds().stream().findFirst().orElse("everyone");
     return graphService.createGraph(everyone, params);
   }
