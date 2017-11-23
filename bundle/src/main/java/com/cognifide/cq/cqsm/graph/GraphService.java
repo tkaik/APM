@@ -1,7 +1,6 @@
 package com.cognifide.cq.cqsm.graph;
 
 import java.util.Iterator;
-import java.util.List;
 
 import javax.jcr.RepositoryException;
 
@@ -24,25 +23,22 @@ public class GraphService {
 	@Reference
 	private transient ResourceResolverFactory resourceResolverFactory;
 
-	public void createGraph(List<String> groupIds) {
+	public void createGraph(String groupId) {
 		try {
 			ResourceResolver resourceResolver = resourceResolverFactory.getAdministrativeResourceResolver(null);
 			UserManager userManager = resourceResolver.adaptTo(UserManager.class);
 
-			Group group = (Group)userManager.getAuthorizable(groupIds.get(0));
-			//println authorizable.getClass()
+			Group group = (Group)userManager.getAuthorizable(groupId);
 
-			Iterator<Authorizable> children = group.getDeclaredMembers(); //children
-			Iterator<Group> parents = group.memberOf(); //children
+			Iterator<Authorizable> children = group.getDeclaredMembers();
+			Iterator<Group> parents = group.memberOf();
 
-			//println "Children"
 			for (Authorizable a : Lists.newArrayList(children)) {
-				//println a.getID()
+
 			}
 
-			//println "Parents"
 			for (Authorizable a : Lists.newArrayList(parents)) {
-			//	println a.getID()
+
 			}
 		} catch(LoginException | RepositoryException exc ) {
 
