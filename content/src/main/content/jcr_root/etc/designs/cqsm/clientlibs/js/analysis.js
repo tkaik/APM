@@ -17,6 +17,8 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+var groupsGraph;
+
 Cog.component.analysis = (function($) {
 
     var api = {};
@@ -42,11 +44,20 @@ Cog.component.analysis = (function($) {
             },
             arrowStrikethrough: false
         },
-        layout : {
-            hierarchical : {
-                enabled : true,
-                direction : 'UD', // UD, DU, LR, RL
-                sortMethod : 'directed' // hubsize, directed
+        layout: {
+            hierarchical: {
+              enabled:true,
+              direction: 'UD',        // UD, DU, LR, RL
+              sortMethod: 'directed'   // hubsize, directed
+            }
+        },
+        physics:{
+            enabled: false,
+        },
+        configure: {
+            enabled: true,
+            filter: function (option, path) {
+              return ((option === 'enabled') && (path.indexOf('physics') !== -1)) || ((path.indexOf('hierarchical') !== -1) && ((option === 'sortMethod') || (option === 'enabled') ));
             }
         },
         groups : {
@@ -56,8 +67,9 @@ Cog.component.analysis = (function($) {
                     face : 'Ionicons',
                     code : '\uf47c',
                     size : 50,
-                    color : '#57169a'
-                }
+                    color : '#4b4a4c'
+                },
+                margin: 5
             },
             users : {
                 shape : 'icon',
@@ -65,8 +77,9 @@ Cog.component.analysis = (function($) {
                     face : 'Ionicons',
                     code : '\uf47e',
                     size : 50,
-                    color : '#aa00ff'
-                }
+                    color : '#4b4a4c'
+                },
+                margin: 5
             }
         }
     };
@@ -75,7 +88,7 @@ Cog.component.analysis = (function($) {
         // create a network
         var container = document.getElementById('servlet-result');
         // initialize your network!
-        var network = new vis.Network(container, data, options);
+        groupsGraph = new vis.Network(container, data, options);
     };
 
     var helper = Cog.component.cqsmHelper;
@@ -102,7 +115,7 @@ Cog.component.analysis = (function($) {
                 getResult(group);
             });
         });
-    }
+    };
 
     return api;
 }(COGjQuery));
