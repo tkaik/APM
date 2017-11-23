@@ -3,9 +3,11 @@ package com.cognifide.cq.cqsm.graph;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.List;
 
 import javax.servlet.ServletException;
 
+import com.cognifide.cq.cqsm.graph.data.Graph;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.GsonBuilder;
 
@@ -37,18 +39,17 @@ public class CsvGraphServlet extends SlingAllMethodsServlet {
 		String csvGraph = null;
 		try {
 			csvGraph = getCsvGraph(groupsParams);
+			writeResponse(response, csvGraph);
 		} catch (CreateGraphException e) {
 			writeErrorResponse(response, e);
 		}
-		writeResponse(response, csvGraph);
 	}
 
 	private void writeResponse(SlingHttpServletResponse response, String csvGraph)
 			throws IOException {
 		response.setContentType("text/csv");
 		response.setHeader("Content-Disposition", "attachment; filename=\"graph.csv\"");
-		try(OutputStream outputStream = response.getOutputStream())
-		{
+		try(OutputStream outputStream = response.getOutputStream()) {
 			String outputResult = csvGraph;
 			outputStream.write(outputResult.getBytes());
 			outputStream.flush();
@@ -77,7 +78,15 @@ public class CsvGraphServlet extends SlingAllMethodsServlet {
 	}
 
 	private String getCsvGraph(CreateGroupsGraphParams params) throws CreateGraphException {
-		String everyone = params.getGroupsIds().stream().findFirst().orElse("everyone");
-		return csvGraphService.createCsvGraphStructure(graphService.createGraph(everyone, params));
+		Graph graph = getGraph(params);
+		return csvGraphService.createCsvGraphStructure(graph);
+	}
+	private Graph getGraph(CreateGroupsGraphParams params) throws CreateGraphException {
+		List<String> groupsIds = params.getGroupsIds();
+		if (!groupsIds.isEmpty()) {
+			return graphService.createGraph(groupsIds.get(0), params);
+		} else {
+			throw new CreateGraphException("GroupId must be provided!");
+		}
 	}
 }

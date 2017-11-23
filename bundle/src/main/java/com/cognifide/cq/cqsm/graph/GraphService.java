@@ -40,30 +40,27 @@ public class GraphService {
 		Set<Group> visitedGroups = Sets.newHashSet();
 		try {
 
-			UserManager userManager = getUserManager();
+			try(ResourceResolver resourceResolver = resourceResolverFactory.getAdministrativeResourceResolver(null)) {
 
-			Group group = (Group)userManager.getAuthorizable(groupId);
+				UserManager userManager = resourceResolver.adaptTo(UserManager.class);
+				if (userManager == null) {
+					throw new CreateGraphException("Failed to create user manager");
+				}
 
-			if (group != null) {
-				result.addRequestedGroup(group.getID(), group.getPrincipal().getName());
-				addEdges(result, group, visitedGroups, params);
-			} else {
-				throw new CreateGraphException("Can not find group for name: " + groupId);
+				Group group = (Group)userManager.getAuthorizable(groupId);
+
+				if (group != null) {
+					result.addRequestedGroup(group.getID(), group.getPrincipal().getName());
+					addEdges(result, group, visitedGroups, params);
+				} else {
+					throw new CreateGraphException("Can not find group for name: " + groupId);
+				}
 			}
+
 		} catch(LoginException | RepositoryException exc ) {
 			throw new CreateGraphException("Failed to create groups with error.", exc);
 		}
 		return result;
-	}
-
-	private UserManager getUserManager() throws LoginException, CreateGraphException {
-		ResourceResolver resourceResolver = resourceResolverFactory.getAdministrativeResourceResolver(null);
-
-		UserManager userManager = resourceResolver.adaptTo(UserManager.class);
-		if (userManager == null) {
-      throw new CreateGraphException("Failed to create user manager");
-    }
-		return userManager;
 	}
 
 	private void addEdges(Graph graph, Group group, Set<Group> visitedGroups, CreateGroupsGraphParams params) throws RepositoryException {

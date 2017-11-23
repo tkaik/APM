@@ -150,7 +150,8 @@ Cog.component.analysis = (function($) {
                 $("#results-message").empty().append("Export finished");
             },
             error : function(data) {
-        var responseInfo = data.responseJSON || {};
+
+        var responseInfo = JSON.parse(data.responseText || "{}");
         $("#results-message").empty().append(responseInfo.message || "Unexpected error occurred.");
             }
         });
