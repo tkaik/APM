@@ -59,6 +59,6 @@ public class CsvGraphServlet extends SlingAllMethodsServlet {
 
 	private String getCsvGraph(CreateGroupsGraphParams params) throws CreatingGroupException {
 		String everyone = params.getGroupsIds().stream().findFirst().orElse("everyone");
-		return csvGraphService.createCsvGraphStructure(graphService.createGraph(everyone));
+		return csvGraphService.createCsvGraphStructure(graphService.createGraph(everyone, params));
 	}
 }

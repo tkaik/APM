@@ -80,10 +80,10 @@ Cog.component.analysis = (function($) {
 
     var helper = Cog.component.cqsmHelper;
 
-    function getResult(group) {
+    function getResult(group, showChildren, showParents) {
         $.ajax({
             type : "GET",
-            url : "/bin/createGroupGraph?group=" + group,
+            url : "/bin/createGroupGraph?group=" + group + "&showChildren=" + showChildren + "&showParents=" + showParents,
             dataType : "json",
             success : function(data) {
                 draw(data.data);
@@ -117,7 +117,9 @@ Cog.component.analysis = (function($) {
         $elements.each(function() {
             $(".analyse-button").click(function() {
                 var group = $('input#group').val();
-                getResult(group);
+                var showChildren = $('input#showChildren').is(':checked');
+                var showParents = $('input#showParents').is(':checked');
+                getResult(group, showChildren, showParents);
             });
             $(".csv-button").click(function() {
 				var group = $('input#group').val();
