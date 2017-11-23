@@ -92,8 +92,26 @@ Cog.component.analysis = (function($) {
                 $("#servlet-result").empty().append("error");
             }
         });
-    }
-    ;
+    };
+
+    function getCsvResult(group) {
+		$.ajax({
+			type : "GET",
+			url : "/bin/createCsvGroupGraph?group=" + group,
+			dataType : "json",
+			success : function(data) {
+				var anchor = $('<a/>');
+				 anchor.attr({
+					 href: 'data:attachment/csv;charset=utf-8,' + encodeURI(data),
+					 target: '_blank',
+					 download: 'graph.csv'
+				 })[0].click();
+			},
+			error : function() {
+				$("#servlet-result").empty().append("error");
+			}
+		});
+	};
 
     api.init = function($elements) {
         $elements.each(function() {
@@ -101,6 +119,10 @@ Cog.component.analysis = (function($) {
                 var group = $('input#group').val();
                 getResult(group);
             });
+            $(".csv-button").click(function() {
+				var group = $('input#group').val();
+				getCsvResult(group);
+			});
         });
     }
 

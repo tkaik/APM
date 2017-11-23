@@ -32,6 +32,7 @@
 		Group name(s):<br/>
 		<input id="group" name="group" size="100"/> <br>
 		<button class="cqsm-button analyse-button" type="submit">Analyse</button>
+		<button class="cqsm-button csv-button" type="submit">Generate CSV</button>
 	</div>
 
 	<div id="status-message"></div>
