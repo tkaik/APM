@@ -17,30 +17,87 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-Cog.component.analysis = (function ($) {
+Cog.component.analysis = (function($) {
 
     var api = {};
+
+    var options = {
+        edges : {
+            arrows : {
+                to : {
+                    enabled : true,
+                    scaleFactor : 1,
+                    type : 'arrow'
+                },
+                middle : {
+                    enabled : false,
+                    scaleFactor : 1,
+                    type : 'arrow'
+                },
+                from : {
+                    enabled : false,
+                    scaleFactor : 1,
+                    type : 'arrow'
+                }
+            }
+        },
+        layout : {
+            hierarchical : {
+                enabled : true,
+                direction : 'UD', // UD, DU, LR, RL
+                sortMethod : 'directed' // hubsize, directed
+            }
+        },
+        groups : {
+            usergroups : {
+                shape : 'icon',
+                icon : {
+                    face : 'Ionicons',
+                    code : '\uf47c',
+                    size : 50,
+                    color : '#57169a'
+                }
+            },
+            users : {
+                shape : 'icon',
+                icon : {
+                    face : 'Ionicons',
+                    code : '\uf47e',
+                    size : 50,
+                    color : '#aa00ff'
+                }
+            }
+        }
+    };
+
+    var draw = function(data) {
+        // create a network
+        var container = document.getElementById('servlet-result');
+        // initialize your network!
+        var network = new vis.Network(container, data, options);
+    };
 
     var helper = Cog.component.cqsmHelper;
 
     function getResult(group) {
         $.ajax({
-            type: "GET",
-            url: "/bin/createGroupGraph?group=" + group,
-            dataType: "json",
-            success: function(data) {
-                $("#servlet-result").empty().append(JSON.stringify(data));
+            type : "GET",
+            url : "/bin/createGroupGraph?group=" + group,
+            dataType : "json",
+            success : function(data) {
+                draw(data.data);
             },
-            error: function () {
+            error : function() {
                 $("#servlet-result").empty().append("error");
             }
         });
-    };
+    }
+    ;
 
-    api.init = function ($elements) {
-        $elements.each(function(){
+    api.init = function($elements) {
+        $elements.each(function() {
             $(".analyse-button").click(function() {
-                var group =  $('input#group').val();
+                var group = $('input#group').val();
                 getResult(group);
             });
         });
@@ -50,8 +107,7 @@ Cog.component.analysis = (function ($) {
 }(COGjQuery));
 
 Cog.register({
-    name: 'analysis',
-    api: Cog.component.analysis,
-    selector: '#analysisPage'
+    name : 'analysis',
+    api : Cog.component.analysis,
+    selector : '#analysisPage'
 });
-
