@@ -74,6 +74,7 @@ public class CsvGraphServlet extends SlingAllMethodsServlet {
 		} catch (IOException e) {
 			response.sendError(SlingHttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
+	}
 
 	private String getCsvGraph(CreateGroupsGraphParams params) throws CreateGraphException {
 		String everyone = params.getGroupsIds().stream().findFirst().orElse("everyone");
