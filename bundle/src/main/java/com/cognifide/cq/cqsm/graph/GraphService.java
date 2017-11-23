@@ -1,7 +1,6 @@
 package com.cognifide.cq.cqsm.graph;
 
 import java.util.Iterator;
-import java.util.List;
 
 import javax.jcr.RepositoryException;
 
@@ -15,9 +14,7 @@ import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 
-import com.cognifide.cq.cqsm.graph.data.Edge;
 import com.cognifide.cq.cqsm.graph.data.Graph;
-import com.cognifide.cq.cqsm.graph.data.Node;
 import com.google.common.collect.Lists;
 
 @Component
@@ -28,8 +25,7 @@ public class GraphService {
 	private transient ResourceResolverFactory resourceResolverFactory;
 
 	public Graph createGraph(String groupId) {
-		List<Node> nodes = Lists.newArrayList();
-		List<Edge> edges = Lists.newArrayList();
+		Graph result = new Graph();
 		try {
 			ResourceResolver resourceResolver = resourceResolverFactory.getAdministrativeResourceResolver(null);
 			UserManager userManager = resourceResolver.adaptTo(UserManager.class);
@@ -40,7 +36,7 @@ public class GraphService {
 			Iterator<Group> parents = group.memberOf();
 
 			for (Authorizable a : Lists.newArrayList(children)) {
-
+				//nodes.addAll(children);
 			}
 
 			for (Authorizable a : Lists.newArrayList(parents)) {
@@ -49,6 +45,6 @@ public class GraphService {
 		} catch(LoginException | RepositoryException exc ) {
 
 		}
-		return new Graph(nodes, edges);
+		return result;
 	}
 }

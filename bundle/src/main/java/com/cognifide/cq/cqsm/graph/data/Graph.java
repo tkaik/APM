@@ -1,21 +1,24 @@
 package com.cognifide.cq.cqsm.graph.data;
 
-import java.util.List;
+import java.util.Set;
+
+import com.google.common.collect.Sets;
 
 public class Graph {
-	List<Node> nodes;
-	List<Edge> edges;
+	private Set<Node> nodes = Sets.newHashSet();
+	private Set<Edge> edges = Sets.newHashSet();
 
-	public Graph(List<Node> nodes, List<Edge> edges) {
-		this.nodes = nodes;
-		this.edges = edges;
+	public void addEdge(Node from, Node to) {
+		nodes.add(from);
+		nodes.add(to);
+		edges.add(new Edge(from, to));
 	}
 
-	public List<Node> getNodes() {
+	public Set<Node> getNodes() {
 		return nodes;
 	}
 
-	public List<Edge> getEdges() {
+	public Set<Edge> getEdges() {
 		return edges;
 	}
 }

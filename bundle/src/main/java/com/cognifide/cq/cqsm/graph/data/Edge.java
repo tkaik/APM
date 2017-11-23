@@ -1,19 +1,19 @@
 package com.cognifide.cq.cqsm.graph.data;
 
 public class Edge {
-	private String from;
-	private String to;
+	private Node from;
+	private Node to;
 
-	public Edge(String from, String to) {
+	public Edge(Node from, Node to) {
 		this.from = from;
 		this.to = to;
 	}
 
-	public String getFrom() {
+	public Node getFrom() {
 		return from;
 	}
 
-	public String getTo() {
+	public Node getTo() {
 		return to;
 	}
 
