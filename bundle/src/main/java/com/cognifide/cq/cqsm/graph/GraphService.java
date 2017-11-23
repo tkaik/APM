@@ -48,7 +48,7 @@ public class GraphService {
 		visitedGroups.add(group);
 
 		List<Authorizable> children = Lists.newArrayList(group.getDeclaredMembers());
-		List<Group> parents = Lists.newArrayList(group.memberOf());
+		List<Group> parents = Lists.newArrayList(group.declaredMemberOf());
 
 		for (Authorizable child : children) {
 			if (child.isGroup()) {
