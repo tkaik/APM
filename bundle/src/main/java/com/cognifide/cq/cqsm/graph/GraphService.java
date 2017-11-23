@@ -34,8 +34,10 @@ public class GraphService {
 		try {
 			ResourceResolver resourceResolver = resourceResolverFactory.getAdministrativeResourceResolver(null);
 
-			UserManager userManager = Optional.ofNullable(resourceResolver.adaptTo(UserManager.class))
-					.orElseThrow(() -> new CreatingGroupException("Failed to create user manager"));
+			UserManager userManager = resourceResolver.adaptTo(UserManager.class);
+			if (userManager == null) {
+				throw new CreatingGroupException("Failed to create user manager");
+			}
 
 			Group group = (Group)userManager.getAuthorizable(groupId);
 
