@@ -98,7 +98,7 @@ Cog.component.analysis = (function($) {
 		$.ajax({
 			type : "GET",
 			url : "/bin/createCsvGroupGraph?group=" + group,
-			dataType : "json",
+			dataType : "text",
 			success : function(data) {
 				var anchor = $('<a/>');
 				 anchor.attr({
