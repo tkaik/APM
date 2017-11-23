@@ -12,11 +12,16 @@ public class Node {
 	@SerializedName("label")
 	private String name;
 
-	private String group = "usergroups";
+	private String group;
 
 	public Node(String id, String name) {
+		this(id, name, "usergroups");
+	}
+
+	public Node(String id, String name, String group) {
 		this.id = id;
 		this.name = name;
+		this.group = group;
 	}
 
 	public String getId() {
@@ -44,5 +49,13 @@ public class Node {
 		return new HashCodeBuilder()
 				.append(id)
 				.hashCode();
+	}
+
+	public String getGroup() {
+		return group;
+	}
+
+	public void setGroup(String group) {
+		this.group = group;
 	}
 }

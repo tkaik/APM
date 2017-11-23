@@ -38,7 +38,7 @@
 		<button class="cqsm-button csv-button" type="submit">Generate CSV</button>
 	</div>
 
-	<div id="status-message"></div>
+	<div id="results-message"></div>
 	<div id="servlet-result"></div>
 
 </div>

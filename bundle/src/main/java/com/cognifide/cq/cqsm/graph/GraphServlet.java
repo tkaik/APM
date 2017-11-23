@@ -21,6 +21,7 @@ package com.cognifide.cq.cqsm.graph;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import javax.servlet.ServletException;
 
@@ -91,7 +92,11 @@ public class GraphServlet extends SlingAllMethodsServlet {
     }
   }
   private Graph getGraph(CreateGroupsGraphParams params) throws CreateGraphException {
-    String everyone = params.getGroupsIds().stream().findFirst().orElse("everyone");
-    return graphService.createGraph(everyone, params);
+    List<String> groupsIds = params.getGroupsIds();
+    if (!groupsIds.isEmpty()) {
+      return graphService.createGraph(groupsIds.get(0), params);
+    } else {
+      throw new CreateGraphException("GroupId must be provided!");
+    }
   }
 }

@@ -8,6 +8,10 @@ public class Graph {
 	private Set<Node> nodes = Sets.newHashSet();
 	private Set<Edge> edges = Sets.newHashSet();
 
+	public void addRequestedGroup(String id, String name) {
+		nodes.add(new Node(id, name, "requestedGroup"));
+	}
+
 	public void addEdge(Node from, Node to) {
 		nodes.add(from);
 		nodes.add(to);

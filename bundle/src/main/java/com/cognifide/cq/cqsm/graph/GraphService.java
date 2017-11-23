@@ -47,6 +47,7 @@ public class GraphService {
 			}
 
 			Group group = (Group)userManager.getAuthorizable(groupId);
+			result.addRequestedGroup(group.getID(), group.getPrincipal().getName());
 
 			if (group != null) {
 				addEdges(result, group, visitedGroups, params);

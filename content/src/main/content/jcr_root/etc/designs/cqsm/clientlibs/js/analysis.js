@@ -71,6 +71,16 @@ Cog.component.analysis = (function($) {
                 },
                 margin: 5
             },
+            requestedGroup : {
+                shape : 'icon',
+                icon : {
+                    face : 'Ionicons',
+                    code : '\uf47c',
+                    size : 50,
+                    color : '#00ff00'
+                },
+                margin: 5
+            },
             users : {
                 shape : 'icon',
                 icon : {
@@ -94,16 +104,16 @@ Cog.component.analysis = (function($) {
     var helper = Cog.component.cqsmHelper;
 
     function getResult(groupId, showChildren, showParents) {
-        this.groupId = groupId;
         $.ajax({
             type : "GET",
             url : "/bin/createGroupGraph?group=" + groupId + "&showChildren=" + showChildren + "&showParents=" + showParents,
             dataType : "json",
             success : function(data) {
                 draw(data.data);
+                $("#results-message").empty().append("Analysis finished");
             },
             error : function() {
-                $("#servlet-result").empty().append("error");
+                $("#results-message").empty().append("Error");
             }
         });
     };
@@ -120,9 +130,10 @@ Cog.component.analysis = (function($) {
 					 target: '_blank',
 					 download: 'graph.csv'
 				 })[0].click();
+                $("#results-message").empty().append("Export finished");
 			},
 			error : function() {
-				$("#servlet-result").empty().append("error");
+                $("#results-message").empty().append("Error");
 			}
 		});
 	};
