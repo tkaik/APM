@@ -17,6 +17,7 @@
   limitations under the License.
   =========================LICENSE_END==================================
   --%>
+<%@include file="/libs/foundation/global.jsp"%>
 <head>
 <meta http-equiv="Content-Type" content="text/html; utf-8" />
 <meta http-equiv="Pragma" content="no-cache">

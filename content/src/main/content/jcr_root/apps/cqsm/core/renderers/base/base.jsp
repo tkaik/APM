@@ -20,7 +20,7 @@
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page contentType="text/html" pageEncoding="utf-8"%>
 <%@include file="/libs/foundation/global.jsp"%>
-<%@include file="/apps/cqsm/core/renderers/base/head.jsp"%>
+<cq:include script="head.jsp"/>
 <!DOCTYPE html>
 <html>
 <body>
