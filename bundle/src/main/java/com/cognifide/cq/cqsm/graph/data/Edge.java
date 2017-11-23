@@ -2,6 +2,9 @@ package com.cognifide.cq.cqsm.graph.data;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 public class Edge {
 	@SerializedName("fromNode")
 	private Node from;
@@ -35,7 +38,18 @@ public class Edge {
 		if(!(obj instanceof Edge)) {
 			return false;
 		}
-		Edge edgeObj = (Edge)obj;
-		return this.getFrom().equals(edgeObj.getFrom()) && this.getTo().equals(edgeObj.getTo());
+		Edge other = (Edge)obj;
+		return new EqualsBuilder()
+				.append(from, other.getFrom())
+				.append(to, other.getTo())
+				.isEquals();
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder()
+				.append(from)
+				.append(to)
+				.hashCode();
 	}
 }

@@ -36,10 +36,11 @@ public class GraphService {
 			UserManager userManager = resourceResolver.adaptTo(UserManager.class);
 
 			Group group = (Group)userManager.getAuthorizable(groupId);
-
-			addEdges(result, group, visitedGroups);
+			if (group != null) {
+				addEdges(result, group, visitedGroups);
+			}
 		} catch(LoginException | RepositoryException exc ) {
-
+			//TODO:Exception throw
 		}
 		return result;
 	}
@@ -53,6 +54,7 @@ public class GraphService {
 		for (Authorizable child : children) {
 			if (child.isGroup()) {
 				Group childGroup = (Group)child;
+
 				Node fromNode = new Node(group.getID(), "");
 				Node toNode = new Node(childGroup.getID(), "");
 				graph.addEdge(fromNode, toNode);

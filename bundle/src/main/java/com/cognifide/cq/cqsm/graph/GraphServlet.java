@@ -93,6 +93,7 @@ public class GraphServlet extends SlingAllMethodsServlet {
     g.addEdge(v1, v2 );
     g.addEdge(v2, v4 );
     g.addEdge(v2, v5 );
-    return graphService.createGraph("everyone");
+    String everyone = params.getGroupsIds().stream().findFirst().orElse("everyone");
+    return graphService.createGraph(everyone);
   }
 }

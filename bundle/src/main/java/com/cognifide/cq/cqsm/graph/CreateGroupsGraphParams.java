@@ -20,4 +20,8 @@ public class CreateGroupsGraphParams {
     String[] split = StringUtils.split(groupParam, ',');
     return new CreateGroupsGraphParams(Arrays.asList(split));
   }
+
+  public List<String> getGroupsIds() {
+    return groupsIds;
+  }
 }
